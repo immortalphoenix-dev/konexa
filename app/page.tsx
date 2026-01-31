@@ -14,7 +14,7 @@ import { ScrollAnimation } from "@/components/scroll-animation";
 
 import { getFeaturedProject, getRecentArticles, getTeamMembers } from "@/lib/supabase/queries";
 
-
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [featuredProject, articles, teamMembers] = await Promise.all([

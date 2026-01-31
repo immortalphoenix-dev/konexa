@@ -8,6 +8,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { format } from "date-fns";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewsPage() {
     const supabase = await createClient();
     const { data: allArticles } = await supabase

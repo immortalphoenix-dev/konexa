@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getAllServices, getProjectCount } from "@/lib/supabase/queries";
 
+export const dynamic = "force-dynamic";
 
 export default async function ServicesPage() {
   const [services, projectCount] = await Promise.all([
