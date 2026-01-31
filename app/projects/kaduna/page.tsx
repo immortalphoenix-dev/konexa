@@ -1,11 +1,15 @@
-"use client";
-
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle2, Zap, BarChart3, Users, Leaf } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "Kaduna Integrated Distribution | $50M Utilities Infrastructure",
+    description: "Discover the Kaduna Integrated Distribution Project, a first-of-its-kind utility sub-franchise model in Nigeria.",
+};
 
 export default function KadunaProjectPage() {
     return (

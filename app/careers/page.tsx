@@ -1,11 +1,15 @@
-"use client";
-
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
 import { Briefcase, Heart, Award, Zap, Globe, Users, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+    title: "Careers | Join the Future of Energy in Africa",
+    description: "Join Konexa and help us build a more sustainable and reliable energy future for Africa. Explore our open positions.",
+};
 
 const benefits = [
     {

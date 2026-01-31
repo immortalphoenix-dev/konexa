@@ -8,7 +8,7 @@ import { getAllServices } from "@/lib/supabase/queries";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Our Approach",
+    title: "Our Approach | The Konexa Integrated Utility Model",
 };
 
 export const dynamic = "force-dynamic";

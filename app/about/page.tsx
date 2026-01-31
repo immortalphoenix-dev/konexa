@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Globe, Zap } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "About Us",
+    title: "About Konexa | Our Mission & Strategic Impact",
 };
 
 export default function AboutPage() {

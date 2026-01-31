@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Projects",
+    title: "Projects & Impact | Strategic Infrastructure Across Africa",
 };
 
 export const dynamic = "force-dynamic";

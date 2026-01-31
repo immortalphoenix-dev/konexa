@@ -1,11 +1,15 @@
-"use client";
-
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ArrowRight, Download, Leaf, CheckCircle2, Heart, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "Our Impact | Measuring Social & Environmental Change",
+    description: "Discover how Konexa is driving sustainable transformation across Africa through decarbonized energy and community upliftment.",
+};
 
 export default function ImpactPage() {
     return (

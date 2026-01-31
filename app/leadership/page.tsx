@@ -8,7 +8,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Leadership",
+  title: "Leadership Team | The Visionaries Behind Konexa",
 };
 
 export const dynamic = "force-dynamic";

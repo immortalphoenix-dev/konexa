@@ -10,7 +10,7 @@ import { Metadata } from "next";
 import { format } from "date-fns";
 
 export const metadata: Metadata = {
-    title: "News & Insights",
+    title: "News & Insights | Transforming Africa's Energy Landscape",
 };
 
 export const dynamic = "force-dynamic";

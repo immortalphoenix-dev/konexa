@@ -1,5 +1,4 @@
-"use client";
-
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import {
@@ -12,6 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Mail, Phone, MessageSquare } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "FAQs | Frequently Asked Questions about Konexa",
+    description: "Get answers to common questions about our integrated utility model, services, and how we are transforming energy in Africa.",
+};
 
 export default function FAQsPage() {
     return (

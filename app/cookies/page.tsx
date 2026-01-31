@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+
+export const metadata: Metadata = {
+    title: "Cookie Policy",
+};
 
 export default function CookiesPage() {
     return (

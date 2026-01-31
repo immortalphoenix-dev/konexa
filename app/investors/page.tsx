@@ -1,9 +1,15 @@
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp, ShieldCheck, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    title: "Investor Relations | Partnering for Sustainable Growth",
+    description: "Explore investment opportunities with Konexa as we scale our integrated utility model across African energy markets.",
+};
 
 export default function InvestorsPage() {
     return (

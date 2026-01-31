@@ -15,10 +15,6 @@ import { ScrollAnimation } from "@/components/scroll-animation";
 import { getFeaturedProject, getRecentArticles, getTeamMembers } from "@/lib/supabase/queries";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Home",
-};
-
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {

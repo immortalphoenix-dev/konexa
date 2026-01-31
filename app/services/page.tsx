@@ -11,7 +11,7 @@ import { getAllServices, getProjectCount } from "@/lib/supabase/queries";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Our Services",
+  title: "Distribution Services | Integrated Energy Solutions",
 };
 
 export const dynamic = "force-dynamic";

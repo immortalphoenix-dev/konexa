@@ -1,11 +1,15 @@
-"use client";
-
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { ArrowLeft, Check, Zap, MapPin, BarChart3, Users } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+    title: "Abuja Commercial Mini-Grid | 2.5MW Solar Hybrid",
+    description: "Learn how the Abuja Commercial Mini-Grid is powering over 350 SMEs with reliable, sustainable solar energy.",
+};
 
 export default function AbujaProjectPage() {
     return (
