@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
     { href: "/admin", label: "Overview", icon: LayoutDashboard },
@@ -51,8 +51,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             href={item.href}
                             onClick={() => setIsOpen(false)}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                    ? "bg-[#00c055] text-white font-medium"
-                                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                                ? "bg-[#00c055] text-white font-medium"
+                                : "text-gray-400 hover:bg-white/5 hover:text-white"
                                 }`}
                         >
                             <item.icon size={20} />
@@ -90,6 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0 border-0 w-64">
+                        <SheetTitle className="sr-only">Admin Navigation</SheetTitle>
                         <SidebarContent />
                     </SheetContent>
                 </Sheet>
