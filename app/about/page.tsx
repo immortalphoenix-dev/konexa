@@ -1,5 +1,4 @@
-"use client";
-
+import { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Check, Leaf, Lightbulb, Users, ArrowRight } from "lucide-react";
@@ -7,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { Globe, Zap } from "lucide-react";
+
+export const metadata: Metadata = {
+    title: "About Us",
+};
 
 export default function AboutPage() {
     return (

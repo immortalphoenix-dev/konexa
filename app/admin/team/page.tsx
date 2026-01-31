@@ -1,4 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Manage Team",
+};
 
 export const dynamic = "force-dynamic";
 

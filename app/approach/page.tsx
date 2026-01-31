@@ -5,6 +5,11 @@ import { FrameworkSection } from "@/components/home/framework-section";
 import { StatsSection } from "@/components/home/stats-section";
 import { ConsultationSection } from "@/components/home/consultation-section";
 import { getAllServices } from "@/lib/supabase/queries";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Our Approach",
+};
 
 export const dynamic = "force-dynamic";
 

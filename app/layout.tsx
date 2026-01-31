@@ -5,7 +5,10 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata: Metadata = {
-  title: "Konexa | Powering Africa's Future",
+  title: {
+    default: "Konexa | Powering Africa's Future",
+    template: "%s | Konexa"
+  },
   description:
     "Konexa is the Energy Company of the Future. We are transforming energy systems across Africa through integrated utility models that deliver reliable, sustainable power.",
   keywords: [

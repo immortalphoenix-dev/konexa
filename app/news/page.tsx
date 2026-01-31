@@ -6,7 +6,12 @@ import { Calendar, ArrowRight, Download, FileText } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { Metadata } from "next";
 import { format } from "date-fns";
+
+export const metadata: Metadata = {
+    title: "News & Insights",
+};
 
 export const dynamic = "force-dynamic";
 

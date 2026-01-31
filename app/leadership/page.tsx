@@ -3,8 +3,13 @@ import { SiteFooter } from "@/components/site-footer";
 import { TeamCard } from "@/components/team-card";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Leadership",
+};
 
 export const dynamic = "force-dynamic";
 

@@ -8,6 +8,11 @@ import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 import { getAllServices, getProjectCount } from "@/lib/supabase/queries";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Our Services",
+};
 
 export const dynamic = "force-dynamic";
 

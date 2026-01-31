@@ -5,6 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Projects",
+};
 
 export const dynamic = "force-dynamic";
 

@@ -5,8 +5,23 @@ import { ArrowLeft, CheckCircle2, Zap, BarChart3, Users, Leaf, ShieldCheck, Cpu 
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const supabase = await createClient();
+    const { data: service } = await supabase
+        .from('services')
+        .select('title')
+        .eq('slug', slug)
+        .single();
+
+    return {
+        title: service?.title || "Service Pillar",
+    };
+}
 
 // Icon mapping
 const iconMap: Record<string, any> = {
