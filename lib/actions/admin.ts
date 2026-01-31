@@ -178,3 +178,46 @@ export async function uploadImage(formData: FormData) {
 
     return { url: publicUrl };
 }
+
+// --- SERVICES ---
+
+export async function saveService(formData: any, id?: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("services")
+        .upsert({
+            id: id || undefined,
+            title: formData.title,
+            subtitle: formData.subtitle,
+            slug: formData.slug,
+            description: formData.description,
+            icon: formData.icon,
+            order_index: formData.order_index,
+            features: formData.features,
+            stats: formData.stats,
+            updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath("/admin/services");
+    revalidatePath("/services");
+    revalidatePath(`/services/${formData.slug}`);
+    revalidatePath("/");
+
+    return { success: true };
+}
+
+export async function deleteService(id: string) {
+    const supabase = await createClient();
+    const { error } = await supabase.from("services").delete().eq("id", id);
+    if (error) throw new Error(error.message);
+
+    revalidatePath("/admin/services");
+    revalidatePath("/services");
+    revalidatePath("/");
+    return { success: true };
+}

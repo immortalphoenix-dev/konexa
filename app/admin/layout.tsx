@@ -21,6 +21,7 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 const navItems = [
     { href: "/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/admin/projects", label: "Projects", icon: Briefcase },
+    { href: "/admin/services", label: "Services", icon: Settings },
     { href: "/admin/team", label: "Team Members", icon: Users },
     { href: "/admin/articles", label: "Articles & News", icon: FileText },
     { href: "/admin/contacts", label: "Contact Submissions", icon: Mail },
