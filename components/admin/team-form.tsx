@@ -25,6 +25,7 @@ import { useState } from "react";
 import { saveTeamMember } from "@/lib/actions/admin";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUpload } from "./image-upload";
 
 const teamSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -48,14 +49,14 @@ export function TeamForm({ initialData, onSuccess }: TeamFormProps) {
 
     const form = useForm<TeamFormValues>({
         resolver: zodResolver(teamSchema),
-        defaultValues: initialData || {
-            name: "",
-            role: "",
-            title: "",
-            description: "",
-            category: "management",
-            order_index: 0,
-            image_url: "",
+        defaultValues: {
+            name: initialData?.name ?? "",
+            role: initialData?.role ?? "",
+            title: initialData?.title ?? "",
+            description: initialData?.description ?? "",
+            category: initialData?.category ?? "management",
+            order_index: initialData?.order_index ?? 0,
+            image_url: initialData?.image_url ?? "",
         },
     });
 
@@ -157,9 +158,12 @@ export function TeamForm({ initialData, onSuccess }: TeamFormProps) {
                     name="image_url"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Image URL</FormLabel>
                             <FormControl>
-                                <Input placeholder="https://..." {...field} />
+                                <ImageUpload
+                                    label="Profile Photo"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

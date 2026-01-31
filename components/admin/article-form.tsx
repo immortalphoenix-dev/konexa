@@ -26,6 +26,7 @@ import { useState } from "react";
 import { saveArticle } from "@/lib/actions/admin";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUpload } from "./image-upload";
 
 const articleSchema = z.object({
     title: z.string().min(5, "Title must be at least 5 characters"),
@@ -49,14 +50,14 @@ export function ArticleForm({ initialData, onSuccess }: ArticleFormProps) {
 
     const form = useForm<ArticleFormValues>({
         resolver: zodResolver(articleSchema),
-        defaultValues: initialData || {
-            title: "",
-            slug: "",
-            excerpt: "",
-            content: "",
-            category: "Company News",
-            author: "Konexa Team",
-            image_url: "",
+        defaultValues: {
+            title: initialData?.title ?? "",
+            slug: initialData?.slug ?? "",
+            excerpt: initialData?.excerpt ?? "",
+            content: initialData?.content ?? "",
+            category: initialData?.category ?? "Company News",
+            author: initialData?.author ?? "Konexa Team",
+            image_url: initialData?.image_url ?? "",
         },
     });
 
@@ -147,9 +148,12 @@ export function ArticleForm({ initialData, onSuccess }: ArticleFormProps) {
                     name="image_url"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Image URL</FormLabel>
                             <FormControl>
-                                <Input placeholder="https://images.unsplash.com/..." {...field} />
+                                <ImageUpload
+                                    label="Cover Image"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

@@ -144,3 +144,37 @@ export async function deleteContactSubmission(id: string) {
     revalidatePath("/admin/contacts");
     return { success: true };
 }
+
+// --- IMAGE UPLOAD ---
+
+export async function uploadImage(formData: FormData) {
+    const supabase = await createClient();
+    const file = formData.get("file") as File;
+
+    if (!file) {
+        throw new Error("No file provided");
+    }
+
+    // Generate a unique filename
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { data, error } = await supabase.storage
+        .from("media")
+        .upload(filePath, file, {
+            cacheControl: "3600",
+            upsert: false,
+        });
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+        .from("media")
+        .getPublicUrl(filePath);
+
+    return { url: publicUrl };
+}

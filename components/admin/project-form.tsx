@@ -26,6 +26,7 @@ import { useState } from "react";
 import { saveProject } from "@/lib/actions/admin";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { ImageUpload } from "./image-upload";
 
 const projectSchema = z.object({
     title: z.string().min(5, "Title must be at least 5 characters"),
@@ -51,16 +52,16 @@ export function ProjectForm({ initialData, onSuccess }: ProjectFormProps) {
 
     const form = useForm<ProjectFormValues>({
         resolver: zodResolver(projectSchema),
-        defaultValues: initialData || {
-            title: "",
-            slug: "",
-            description: "",
-            content: "",
-            location: "",
-            image_url: "",
-            featured: false,
-            status: "Active",
-            stats: {},
+        defaultValues: {
+            title: initialData?.title ?? "",
+            slug: initialData?.slug ?? "",
+            description: initialData?.description ?? "",
+            content: initialData?.content ?? "",
+            location: initialData?.location ?? "",
+            image_url: initialData?.image_url ?? "",
+            featured: initialData?.featured ?? false,
+            status: initialData?.status ?? "Active",
+            stats: initialData?.stats ?? {},
         },
     });
 
@@ -148,9 +149,12 @@ export function ProjectForm({ initialData, onSuccess }: ProjectFormProps) {
                     name="image_url"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Image URL</FormLabel>
                             <FormControl>
-                                <Input placeholder="https://..." {...field} />
+                                <ImageUpload
+                                    label="Project Thumbnail"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
