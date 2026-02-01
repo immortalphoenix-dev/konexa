@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS public.services (
 -- Ensure columns exist if table was created in an older version of the script
 ALTER TABLE public.services ADD COLUMN IF NOT EXISTS subtitle TEXT;
 ALTER TABLE public.services ADD COLUMN IF NOT EXISTS stats JSONB DEFAULT '[]';
+ALTER TABLE public.articles ADD COLUMN IF NOT EXISTS gallery_images JSONB DEFAULT '[]';
 
 -- Enable Row Level Security
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;

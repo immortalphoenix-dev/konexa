@@ -1,6 +1,8 @@
 -- SQL Fix for Missing Article Content & Images
 -- Run this in your Supabase SQL Editor to populate the 'content' and 'image_url' fields
 
+ALTER TABLE public.articles ADD COLUMN IF NOT EXISTS gallery_images JSONB DEFAULT '[]';
+
 UPDATE public.articles
 SET 
   image_url = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop',
