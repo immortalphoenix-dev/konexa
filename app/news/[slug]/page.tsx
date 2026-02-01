@@ -71,11 +71,19 @@ export default async function ArticleDetailPage({ params }: Props) {
                         <h1 className="text-4xl md:text-5xl font-black text-[#0f1c2e] dark:text-white mb-8 leading-tight">
                             {article.title}
                         </h1>
+
+                        {/* Lead Excerpt */}
+                        {article.excerpt && (
+                            <p className="text-xl text-gray-500 dark:text-gray-400 font-medium mb-8 leading-relaxed border-l-4 border-[#00c055] pl-6">
+                                {article.excerpt}
+                            </p>
+                        )}
+
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                                 <User size={20} className="text-gray-500" />
                             </div>
-                            <span className="font-bold text-[#0f1c2e] dark:text-gray-300">{article.author}</span>
+                            <span className="font-bold text-[#0f1c2e] dark:text-gray-300">By {article.author}</span>
                         </div>
                     </header>
 
@@ -103,9 +111,38 @@ export default async function ArticleDetailPage({ params }: Props) {
                                 {article.content}
                             </ReactMarkdown>
                         ) : (
-                            <p className="text-gray-400 italic">Full article content is coming soon...</p>
+                            <div className="bg-gray-50 dark:bg-gray-900/20 p-8 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800 text-center">
+                                <p className="text-gray-400 italic mb-0">Detailed analysis and full report for this entry are being finalized and will be available shortly.</p>
+                            </div>
                         )}
                     </div>
+
+                    {/* Article Gallery */}
+                    {article.gallery_images && article.gallery_images.length > 0 && (
+                        <div className="mt-20">
+                            <h2 className="text-2xl font-black text-[#0f1c2e] dark:text-white mb-8 flex items-center gap-3">
+                                <div className="h-8 w-1 bg-[#00c055] rounded-full" />
+                                Interactive Gallery
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {article.gallery_images.map((url: string, index: number) => (
+                                    <div
+                                        key={url + index}
+                                        className={`relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl group cursor-zoom-in ${index === 0 && article.gallery_images.length % 2 !== 0 ? 'md:col-span-2 aspect-video' : ''
+                                            }`}
+                                    >
+                                        <Image
+                                            src={url}
+                                            alt={`Story visual ${index + 1}`}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </article>
             </main>
             <SiteFooter />

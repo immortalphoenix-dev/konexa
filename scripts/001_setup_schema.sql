@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
   slug TEXT UNIQUE NOT NULL,
   excerpt TEXT,
   content TEXT,
+  gallery_images JSONB DEFAULT '[]',
   image_url TEXT,
   category TEXT,
   author TEXT,

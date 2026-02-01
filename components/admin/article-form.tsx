@@ -27,6 +27,7 @@ import { saveArticle } from "@/lib/actions/admin";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ImageUpload } from "./image-upload";
+import { GalleryUpload } from "./gallery-upload";
 
 const articleSchema = z.object({
     title: z.string().min(5, "Title must be at least 5 characters"),
@@ -36,6 +37,7 @@ const articleSchema = z.object({
     category: z.string().min(1, "Category is required"),
     author: z.string().min(2, "Author is required"),
     image_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
+    gallery_images: z.array(z.string().url()).optional().default([]),
 });
 
 type ArticleFormValues = z.infer<typeof articleSchema>;
@@ -58,6 +60,7 @@ export function ArticleForm({ initialData, onSuccess }: ArticleFormProps) {
             category: initialData?.category ?? "Company News",
             author: initialData?.author ?? "Konexa Team",
             image_url: initialData?.image_url ?? "",
+            gallery_images: initialData?.gallery_images ?? [],
         },
     });
 
@@ -180,6 +183,22 @@ export function ArticleForm({ initialData, onSuccess }: ArticleFormProps) {
                             <FormLabel>Content</FormLabel>
                             <FormControl>
                                 <Textarea className="min-h-[200px]" placeholder="Full article content (supports markdown)" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="gallery_images"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                                <GalleryUpload
+                                    label="Article Gallery"
+                                    value={field.value || []}
+                                    onChange={field.onChange}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

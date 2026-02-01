@@ -32,6 +32,7 @@ export interface Article {
   slug: string
   excerpt: string | null
   content: string | null
+  gallery_images: string[] | null
   image_url: string | null
   category: string | null
   author: string | null
