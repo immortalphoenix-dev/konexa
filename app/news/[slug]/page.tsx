@@ -98,9 +98,13 @@ export default async function ArticleDetailPage({ params }: Props) {
                         dark:prose-strong:text-white prose-blockquote:border-l-[#00c055] 
                         prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-900/40 
                         prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {article.content}
-                        </ReactMarkdown>
+                        {article.content ? (
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {article.content}
+                            </ReactMarkdown>
+                        ) : (
+                            <p className="text-gray-400 italic">Full article content is coming soon...</p>
+                        )}
                     </div>
                 </article>
             </main>
