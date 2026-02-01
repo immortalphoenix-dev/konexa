@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { Metadata } from "next";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -72,18 +73,11 @@ export default async function ArticleDetailPage({ params }: Props) {
                             {article.title}
                         </h1>
 
-                        {/* Lead Excerpt */}
-                        {article.excerpt && (
-                            <p className="text-xl text-gray-500 dark:text-gray-400 font-medium mb-8 leading-relaxed border-l-4 border-[#00c055] pl-6">
-                                {article.excerpt}
-                            </p>
-                        )}
-
                         <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                                 <User size={20} className="text-gray-500" />
                             </div>
-                            <span className="font-bold text-[#0f1c2e] dark:text-gray-300">By {article.author}</span>
+                            <span className="font-bold text-[#0f1c2e] dark:text-gray-300">{article.author}</span>
                         </div>
                     </header>
 
@@ -99,15 +93,36 @@ export default async function ArticleDetailPage({ params }: Props) {
                         </div>
                     )}
 
-                    <div className="prose prose-lg dark:prose-invert max-w-none 
-                        prose-headings:text-[#0f1c2e] dark:prose-headings:text-white 
-                        prose-headings:font-black prose-p:text-gray-600 dark:prose-p:text-gray-400 
-                        prose-p:leading-relaxed prose-a:text-[#00c055] prose-strong:text-[#0f1c2e] 
-                        dark:prose-strong:text-white prose-blockquote:border-l-[#00c055] 
-                        prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-900/40 
-                        prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl">
+                    <div className="max-w-none">
                         {article.content ? (
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm, remarkBreaks]}
+                                components={{
+                                    h1: ({ children }) => <h1 className="text-4xl md:text-5xl font-black text-[#0f1c2e] dark:text-white mt-16 mb-8 leading-tight">{children}</h1>,
+                                    h2: ({ children }) => <h2 className="text-2xl md:text-3xl font-black text-[#0f1c2e] dark:text-white mt-12 mb-6 border-b pb-3 border-gray-100 dark:border-gray-800">{children}</h2>,
+                                    h3: ({ children }) => <h3 className="text-xl md:text-2xl font-bold text-[#0f1c2e] dark:text-white mt-10 mb-4">{children}</h3>,
+                                    p: ({ children }) => <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-6">{children}</p>,
+                                    blockquote: ({ children }) => (
+                                        <blockquote className="border-l-4 border-[#00c055] bg-gray-50 dark:bg-gray-900/40 py-6 px-8 italic rounded-r-2xl my-10 text-xl text-gray-700 dark:text-gray-300 shadow-sm">
+                                            {children}
+                                        </blockquote>
+                                    ),
+                                    ul: ({ children }) => <ul className="my-8 ml-6 space-y-4 list-none">{children}</ul>,
+                                    ol: ({ children }) => <ol className="my-8 ml-6 space-y-4 list-decimal marker:text-[#00c055] marker:font-bold">{children}</ol>,
+                                    li: ({ children }) => (
+                                        <li className="relative text-lg text-gray-600 dark:text-gray-400 pl-2">
+                                            <span className="absolute -left-6 text-[#00c055] font-black">●</span>
+                                            {children}
+                                        </li>
+                                    ),
+                                    strong: ({ children }) => <strong className="font-bold text-[#0f1c2e] dark:text-white underline decoration-[#00c055]/30 decoration-2 underline-offset-2">{children}</strong>,
+                                    a: ({ href, children }) => (
+                                        <a href={href} className="text-[#00c055] font-semibold hover:underline decoration-2 underline-offset-4 transition-all" target="_blank" rel="noopener noreferrer">
+                                            {children}
+                                        </a>
+                                    ),
+                                }}
+                            >
                                 {article.content}
                             </ReactMarkdown>
                         ) : (
