@@ -107,11 +107,10 @@ export default async function ArticleDetailPage({ params }: Props) {
                                             {children}
                                         </blockquote>
                                     ),
-                                    ul: ({ children }) => <ul className="my-8 ml-6 space-y-4 list-none">{children}</ul>,
+                                    ul: ({ children }) => <ul className="my-8 ml-6 space-y-4 list-disc marker:text-[#00c055]">{children}</ul>,
                                     ol: ({ children }) => <ol className="my-8 ml-6 space-y-4 list-decimal marker:text-[#00c055] marker:font-bold">{children}</ol>,
                                     li: ({ children }) => (
-                                        <li className="relative text-lg text-gray-600 dark:text-gray-400 pl-2">
-                                            <span className="absolute -left-6 text-[#00c055] font-black">●</span>
+                                        <li className="text-lg text-gray-600 dark:text-gray-400 pl-2">
                                             {children}
                                         </li>
                                     ),
