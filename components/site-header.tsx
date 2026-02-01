@@ -45,7 +45,15 @@ const topNavItems = [
 
 export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  useState(() => {
+    if (typeof window !== "undefined") {
+      setMounted(true);
+    }
+    return undefined;
+  });
 
   // Helper to check if a specific path or any of its children are active
   const isActive = (item: NavItem) => {
@@ -109,7 +117,7 @@ export function SiteHeader() {
                 );
 
                 if (item.children) {
-                  return (
+                  return mounted ? (
                     <DropdownMenu key={item.label}>
                       <DropdownMenuTrigger asChild>
                         <button className={cn(baseClasses, "group gap-1.5 border-none bg-transparent p-0")}>
@@ -133,6 +141,11 @@ export function SiteHeader() {
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
+                  ) : (
+                    <div key={item.label} className={cn(baseClasses, "group gap-1.5")}>
+                      {item.label}
+                      <ChevronDown size={14} />
+                    </div>
                   );
                 }
 

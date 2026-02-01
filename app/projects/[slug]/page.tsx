@@ -4,9 +4,9 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, ArrowLeft, CheckCircle2 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
+import { ResilientImage } from "@/components/ui/resilient-image";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -45,21 +45,25 @@ export default async function ProjectDetailPage({ params }: Props) {
 
     const stats = project.stats as Record<string, string> || {};
 
+    const statusColors: Record<string, string> = {
+        ongoing: "bg-[#00c055]",
+        completed: "bg-[#1e3a8a]",
+        planned: "bg-slate-500",
+    };
+    const currentStatus = project.status?.toLowerCase() || "ongoing";
+
     return (
         <>
             <SiteHeader />
             <main className="bg-white dark:bg-background">
                 {/* Hero */}
                 <section className="relative h-[60vh] min-h-[400px] flex items-end">
-                    {project.image_url && (
-                        <Image
-                            src={project.image_url}
-                            alt={project.title}
-                            fill
-                            className="object-cover"
-                            priority
-                        />
-                    )}
+                    <ResilientImage
+                        src={project.image_url}
+                        alt={project.title}
+                        fill
+                        priority
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f1c2e] via-[#0f1c2e]/40 to-transparent" />
 
                     <div className="container mx-auto px-4 relative z-10 pb-16">
@@ -71,7 +75,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                         </Link>
 
                         <div className="flex flex-wrap items-center gap-4 mb-6">
-                            <Badge className="bg-[#00c055] text-white border-none rounded-full px-4 py-1">
+                            <Badge className={`${statusColors[currentStatus] || "bg-[#00c055]"} text-white border-none rounded-full px-4 py-1`}>
                                 {project.status?.toUpperCase()}
                             </Badge>
                             <div className="flex items-center text-gray-200">

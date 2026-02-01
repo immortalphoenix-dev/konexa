@@ -16,6 +16,7 @@ export async function saveArticle(formData: any, id?: string) {
         category: formData.category,
         author: formData.author,
         image_url: formData.image_url,
+        gallery_images: formData.gallery_images,
         published_at: formData.published_at || new Date().toISOString(),
         updated_at: new Date().toISOString(),
     };
@@ -95,6 +96,42 @@ export async function deleteTeamMember(id: string) {
 export async function saveProject(formData: any, id?: string) {
     const supabase = await createClient();
 
+    // If making this project featured, ensure we don't exceed the limit of 2
+    if (formData.featured) {
+        // Fetch current featured projects (excluding this one if updating)
+        let query = supabase
+            .from("projects")
+            .select("id")
+            .eq("featured", true);
+
+        if (id) {
+            query = query.neq("id", id);
+        }
+
+        const { data: featuredProjects } = await query.order('updated_at', { ascending: true });
+
+        if (featuredProjects && featuredProjects.length >= 2) {
+            // Need to un-feature the oldest ones to make room for 2
+            const idsToUnfeature = featuredProjects
+                .slice(0, featuredProjects.length - 1) // Keep the most recent 1, unfeature others
+                .map(p => p.id);
+
+            // To ensure we only have 1 older one left (because current set to true will make it 2), 
+            // we unfeature all but the single most recent.
+            const allOldFeaturedIds = featuredProjects.map(p => p.id);
+            // We want to keep ONLY the most recent one among the old ones.
+            const idsToKeep = [featuredProjects[featuredProjects.length - 1].id];
+            const actuallyUnfeature = allOldFeaturedIds.filter(fid => !idsToKeep.includes(fid));
+
+            if (actuallyUnfeature.length > 0) {
+                await supabase
+                    .from("projects")
+                    .update({ featured: false })
+                    .in("id", actuallyUnfeature);
+            }
+        }
+    }
+
     const data = {
         title: formData.title,
         slug: formData.slug,
@@ -121,6 +158,7 @@ export async function saveProject(formData: any, id?: string) {
 
     revalidatePath("/admin/projects");
     revalidatePath("/projects");
+    revalidatePath("/");
     return { success: true };
 }
 

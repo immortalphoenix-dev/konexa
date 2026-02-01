@@ -1,13 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { Project, Article, Service, TeamMember } from "@/lib/types/database";
 
-export async function getFeaturedProjects(limit: number = 5) {
+export async function getFeaturedProjects(limit: number = 2) {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("projects")
         .select("*")
         .eq("featured", true)
-        .order("created_at", { ascending: false })
+        .order("updated_at", { ascending: false })
         .limit(limit);
 
     if (error) {

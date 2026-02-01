@@ -175,6 +175,9 @@ export function ProjectForm({ initialData, onSuccess }: ProjectFormProps) {
                                 <FormLabel>Featured Project</FormLabel>
                                 <p className="text-sm text-muted-foreground">
                                     Show this project on the homepage and at the top of lists.
+                                    <span className="block mt-1 font-bold text-[#1e3a8a] dark:text-blue-400">
+                                        Note: Only 2 projects can be featured at a time. Featuring this will un-feature the oldest featured project.
+                                    </span>
                                 </p>
                             </div>
                         </FormItem>

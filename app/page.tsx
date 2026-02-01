@@ -4,7 +4,6 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ChallengeSection } from "@/components/home/challenge-section";
 import { OperationalFrameworkSection } from "@/components/home/operational-framework-section";
 import { RegionalPresenceSection } from "@/components/home/regional-presence-section";
-import { FeaturedProjectSection } from "@/components/home/featured-project-section";
 import { SustainabilitySection } from "@/components/home/sustainability-section";
 import { ApproachSection } from "@/components/home/approach-section";
 import { LeadershipPreviewSection } from "@/components/home/leadership-preview-section";
@@ -19,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [featuredProjects, articles, teamMembers] = await Promise.all([
-    getFeaturedProjects(5),
+    getFeaturedProjects(2),
     getRecentArticles(3),
     getTeamMembers(),
   ]);

@@ -1,12 +1,12 @@
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ArrowRight, CheckCircle2, Leaf, Download } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
 import { ProjectsGrid } from "@/components/projects-grid";
+import { ResilientImage } from "@/components/ui/resilient-image";
 
 export const metadata: Metadata = {
     title: "Projects & Impact | Strategic Infrastructure Across Africa",
@@ -14,15 +14,41 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function ProjectsPage() {
+export default async function ProjectsPage(props: {
+    searchParams: Promise<{ page?: string }>
+}) {
+    const searchParams = await props.searchParams;
+    const currentPage = parseInt(searchParams.page || "1");
+    const pageSize = 6;
+
     const supabase = await createClient();
-    const { data: allProjects } = await supabase
+
+    // Fetch featured projects (strictly limited to 2)
+    const { data: featuredProjects } = await supabase
         .from('projects')
         .select('*')
-        .order('created_at', { ascending: false });
+        .eq('featured', true)
+        .order('updated_at', { ascending: false })
+        .limit(2);
 
-    const featuredProjects = allProjects?.filter(p => p.featured) || [];
-    const regularProjects = allProjects?.filter(p => !p.featured) || [];
+    // Get total count for regular projects pagination
+    const { count: regularCount } = await supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true })
+        .eq('featured', false);
+
+    // Fetch regular projects for current page
+    const from = (currentPage - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    const { data: regularProjects } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('featured', false)
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+    const totalPages = Math.ceil((regularCount || 0) / pageSize);
 
     return (
         <>
@@ -31,13 +57,14 @@ export default async function ProjectsPage() {
                 {/* Hero Section */}
                 <section className="container mx-auto px-4 pt-8 lg:pt-12 pb-16">
                     <div className="relative rounded-[2.5rem] overflow-hidden min-h-[500px] flex items-center justify-center text-center px-4">
-                        <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{
-                                backgroundImage: "url('/hero-solar.png')",
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-[#0f1c2e]/70 mix-blend-multiply" />
+                        <div className="absolute inset-0 bg-[#0f1c2e]">
+                            <ResilientImage
+                                src="/hero-solar.png"
+                                alt="Building the Future"
+                                fill
+                                priority
+                                className="opacity-30 object-cover"
+                            />
                         </div>
 
                         <div className="relative z-10 max-w-4xl mx-auto text-white py-20">
@@ -104,63 +131,68 @@ export default async function ProjectsPage() {
                 </section>
 
                 {/* Featured Case Studies Section - Alternating Layout */}
-                <section className="container mx-auto px-4 mb-24">
-                    <div className="flex items-center gap-4 mb-12">
-                        <div className="h-1 flex-1 bg-[#1e3a8a] max-w-[100px] md:max-w-[200px]"></div>
-                        <h2 className="text-2xl md:text-3xl font-bold text-[#1e1e1e] dark:text-white whitespace-nowrap">Featured Case Studies</h2>
-                        <div className="h-1 flex-1 bg-[#00c055]"></div>
-                    </div>
+                {featuredProjects && featuredProjects.length > 0 && (
+                    <section className="container mx-auto px-4 mb-24">
+                        <div className="flex items-center gap-4 mb-12">
+                            <div className="h-1 flex-1 bg-[#1e3a8a] max-w-[100px] md:max-w-[200px]"></div>
+                            <h2 className="text-2xl md:text-3xl font-bold text-[#1e1e1e] dark:text-white whitespace-nowrap">Featured Case Studies</h2>
+                            <div className="h-1 flex-1 bg-[#00c055]"></div>
+                        </div>
 
-                    <div className="flex flex-col gap-12">
-                        {featuredProjects.map((project, idx) => {
-                            const isOdd = idx % 2 !== 0;
-                            const stats = project.stats as any || {};
-                            return (
-                                <div key={project.id} className="bg-white dark:bg-card rounded-xl overflow-hidden shadow-lg grid md:grid-cols-2 min-h-[500px] border border-transparent dark:border-gray-800">
-                                    <div className={`relative h-64 md:h-auto overflow-hidden ${isOdd ? 'md:order-2' : ''}`}>
-                                        <Image
-                                            src={project.image_url || '/placeholder.svg'}
-                                            alt={project.title}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                        <div className={`absolute top-6 ${isOdd ? 'right-6 bg-[#00c055]' : 'left-6 bg-[#1e3a8a]'} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-sm shadow-sm`}>
-                                            Ongoing Project
+                        <div className="flex flex-col gap-12">
+                            {featuredProjects.map((project, idx) => {
+                                const isOdd = idx % 2 !== 0;
+                                const stats = project.stats as any || {};
+                                return (
+                                    <div key={project.id} className="bg-white dark:bg-card rounded-xl overflow-hidden shadow-lg grid md:grid-cols-2 min-h-[500px] border border-transparent dark:border-gray-800">
+                                        <div className={`relative h-64 md:h-auto overflow-hidden ${isOdd ? 'md:order-2' : ''}`}>
+                                            <ResilientImage
+                                                src={project.image_url}
+                                                alt={project.title}
+                                                fill
+                                            />
+                                            <div className={`absolute top-6 ${isOdd ? 'right-6 bg-[#00c055]' : 'left-6 bg-[#1e3a8a]'} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-sm shadow-sm`}>
+                                                {project.status?.toUpperCase() || 'ONGOING'}
+                                            </div>
+                                        </div>
+                                        <div className={`p-8 md:p-12 lg:p-16 flex flex-col justify-center ${isOdd ? 'md:order-1' : ''}`}>
+                                            <h3 className="text-3xl font-black text-[#0f1c2e] dark:text-white mb-6 leading-tight">
+                                                {project.title}
+                                            </h3>
+                                            <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-[15px]">
+                                                {project.description}
+                                            </p>
+
+                                            <div className="grid grid-cols-2 gap-6 mb-10">
+                                                {Object.entries(stats).map(([key, value], i) => (
+                                                    <div key={key} className={`${i % 2 === 0 ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-green-50 dark:bg-green-900/20'} p-4 rounded-lg`}>
+                                                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase mb-1">
+                                                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                                                        </div>
+                                                        <div className={`text-2xl font-black ${i % 2 === 0 ? 'text-[#1e3a8a] dark:text-blue-400' : 'text-[#00c055] dark:text-green-500'}`}>
+                                                            {value as string}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <Link href={`/projects/${project.slug}`} className="inline-flex items-center text-[#1e3a8a] dark:text-[#00c055] font-bold text-sm group hover:underline">
+                                                Read Case Study <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                                            </Link>
                                         </div>
                                     </div>
-                                    <div className={`p-8 md:p-12 lg:p-16 flex flex-col justify-center ${isOdd ? 'md:order-1' : ''}`}>
-                                        <h3 className="text-3xl font-black text-[#0f1c2e] dark:text-white mb-6 leading-tight">
-                                            {project.title}
-                                        </h3>
-                                        <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-[15px]">
-                                            {project.description}
-                                        </p>
-
-                                        <div className="grid grid-cols-2 gap-6 mb-10">
-                                            {Object.entries(stats).map(([key, value], i) => (
-                                                <div key={key} className={`${i % 2 === 0 ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-green-50 dark:bg-green-900/20'} p-4 rounded-lg`}>
-                                                    <div className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase mb-1">
-                                                        {key.replace(/([A-Z])/g, ' $1').trim()}
-                                                    </div>
-                                                    <div className={`text-2xl font-black ${i % 2 === 0 ? 'text-[#1e3a8a] dark:text-blue-400' : 'text-[#00c055] dark:text-green-500'}`}>
-                                                        {value as string}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <Link href={`/projects/${project.slug}`} className="inline-flex items-center text-[#1e3a8a] dark:text-[#00c055] font-bold text-sm group hover:underline">
-                                            Read Case Study <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </section>
+                                );
+                            })}
+                        </div>
+                    </section>
+                )}
 
                 {/* All Projects Grid Section */}
-                <ProjectsGrid projects={regularProjects} />
+                <ProjectsGrid
+                    projects={regularProjects || []}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                />
 
                 {/* Our Footprint Section */}
                 <section className="bg-[#0f1416] py-24">
@@ -174,7 +206,7 @@ export default async function ProjectsPage() {
 
                         <div className="bg-[#1a2226] rounded-3xl p-8 mb-16 relative overflow-hidden min-h-[600px] flex items-center justify-center border border-white/5">
                             <div className="relative w-[600px] h-[600px]">
-                                <Image
+                                <ResilientImage
                                     src="/footprint-map.png"
                                     alt="Map of Africa"
                                     fill
@@ -222,10 +254,10 @@ export default async function ProjectsPage() {
                             We are looking for investment and strategic partners to accelerate our mission of universal energy access.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <Button size="lg" className="bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white font-bold h-12 px-8 min-w-[200px] rounded-lg">
+                            <Button size="lg" className="bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white font-bold h-12 px-8 min-w-[200px] rounded-lg" asChild>
                                 <Link href="/investors">Investor Relations</Link>
                             </Button>
-                            <Button size="lg" className="bg-[#00c055] hover:bg-[#00c055]/90 text-white font-bold h-12 px-8 min-w-[200px] rounded-lg">
+                            <Button size="lg" className="bg-[#00c055] hover:bg-[#00c055]/90 text-white font-bold h-12 px-8 min-w-[200px] rounded-lg" asChild>
                                 <Link href="/careers">Work With Us</Link>
                             </Button>
                         </div>
