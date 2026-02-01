@@ -8,6 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Metadata } from "next";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -89,11 +91,16 @@ export default async function ArticleDetailPage({ params }: Props) {
                         </div>
                     )}
 
-                    <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-[#0f1c2e] prose-headings:font-black prose-p:text-gray-600 dark:prose-p:text-gray-400 prose-a:text-[#00c055]">
-                        {/* We use whitespace-pre-wrap to respect manual breaks if not using a markdown renderer */}
-                        <div className="whitespace-pre-wrap leading-relaxed">
+                    <div className="prose prose-lg dark:prose-invert max-w-none 
+                        prose-headings:text-[#0f1c2e] dark:prose-headings:text-white 
+                        prose-headings:font-black prose-p:text-gray-600 dark:prose-p:text-gray-400 
+                        prose-p:leading-relaxed prose-a:text-[#00c055] prose-strong:text-[#0f1c2e] 
+                        dark:prose-strong:text-white prose-blockquote:border-l-[#00c055] 
+                        prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-900/40 
+                        prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {article.content}
-                        </div>
+                        </ReactMarkdown>
                     </div>
                 </article>
             </main>
