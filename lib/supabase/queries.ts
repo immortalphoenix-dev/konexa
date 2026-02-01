@@ -1,21 +1,21 @@
 import { createClient } from "@/lib/supabase/server";
 import { Project, Article, Service, TeamMember } from "@/lib/types/database";
 
-export async function getFeaturedProject() {
+export async function getFeaturedProjects(limit: number = 5) {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("projects")
         .select("*")
         .eq("featured", true)
-        .limit(1)
-        .single();
+        .order("created_at", { ascending: false })
+        .limit(limit);
 
     if (error) {
-        console.error("Error fetching featured project:", error);
-        return null;
+        console.error("Error fetching featured projects:", error);
+        return [];
     }
 
-    return data as Project;
+    return data as Project[];
 }
 
 export async function getRecentArticles(limit: number = 3) {

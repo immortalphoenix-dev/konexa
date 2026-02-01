@@ -12,14 +12,14 @@ import { PartnersSection } from "@/components/home/partners-section";
 import { ArticlesSection } from "@/components/home/articles-section";
 import { ScrollAnimation } from "@/components/scroll-animation";
 
-import { getFeaturedProject, getRecentArticles, getTeamMembers } from "@/lib/supabase/queries";
-import type { Metadata } from "next";
+import { getFeaturedProjects, getRecentArticles, getTeamMembers } from "@/lib/supabase/queries";
+import { ProjectsSlider } from "@/components/home/projects-slider";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featuredProject, articles, teamMembers] = await Promise.all([
-    getFeaturedProject(),
+  const [featuredProjects, articles, teamMembers] = await Promise.all([
+    getFeaturedProjects(5),
     getRecentArticles(3),
     getTeamMembers(),
   ]);
@@ -47,9 +47,9 @@ export default async function HomePage() {
           <RegionalPresenceSection />
         </ScrollAnimation>
 
-        {/* Featured Project - Kaduna */}
+        {/* Projects Slider */}
         <ScrollAnimation>
-          <FeaturedProjectSection project={featuredProject} />
+          <ProjectsSlider projects={featuredProjects} />
         </ScrollAnimation>
 
         {/* Sustainability - UN SDGs */}

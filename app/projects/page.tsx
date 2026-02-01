@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
+import { ProjectsGrid } from "@/components/projects-grid";
 
 export const metadata: Metadata = {
     title: "Projects & Impact | Strategic Infrastructure Across Africa",
@@ -15,28 +16,30 @@ export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
     const supabase = await createClient();
-    const { data: projects } = await supabase.from('projects').select('*');
+    const { data: allProjects } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    const featuredProjects = allProjects?.filter(p => p.featured) || [];
+    const regularProjects = allProjects?.filter(p => !p.featured) || [];
 
     return (
         <>
             <SiteHeader />
             <main className="bg-gray-50/50 dark:bg-background pb-20">
-                {/* Hero Section - Card Style */}
+                {/* Hero Section */}
                 <section className="container mx-auto px-4 pt-8 lg:pt-12 pb-16">
                     <div className="relative rounded-[2.5rem] overflow-hidden min-h-[500px] flex items-center justify-center text-center px-4">
-                        {/* Background Image */}
                         <div
                             className="absolute inset-0 bg-cover bg-center"
                             style={{
-                                backgroundImage:
-                                    "url('/hero-solar.png')",
+                                backgroundImage: "url('/hero-solar.png')",
                             }}
                         >
-                            {/* Overlay - Dark Blue/Navy */}
                             <div className="absolute inset-0 bg-[#0f1c2e]/70 mix-blend-multiply" />
                         </div>
 
-                        {/* Content */}
                         <div className="relative z-10 max-w-4xl mx-auto text-white py-20">
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
                                 Driving the Energy Transition <br className="hidden md:block" />
@@ -54,7 +57,7 @@ export default async function ProjectsPage() {
                     </div>
                 </section>
 
-                {/* Stats Section - clean, no borders as requested */}
+                {/* Stats Section */}
                 <section className="container mx-auto px-4 mb-20">
                     <div className="mb-10">
                         <span className="text-[#1e3a8a] dark:text-blue-400 text-xs font-extrabold uppercase tracking-widest block mb-2">
@@ -66,7 +69,6 @@ export default async function ProjectsPage() {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6">
-                        {/* Card 1 */}
                         <div className="bg-white dark:bg-card p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between h-full">
                             <div>
                                 <div className="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-4">TOTAL CONNECTIONS</div>
@@ -77,7 +79,6 @@ export default async function ProjectsPage() {
                             </div>
                         </div>
 
-                        {/* Card 2 */}
                         <div className="bg-white dark:bg-card p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between h-full">
                             <div>
                                 <div className="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-4">RELIABILITY INCREASE</div>
@@ -89,7 +90,6 @@ export default async function ProjectsPage() {
                             </div>
                         </div>
 
-                        {/* Card 3 */}
                         <div className="bg-white dark:bg-card p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between h-full">
                             <div>
                                 <div className="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-4">CO2 DISPLACED</div>
@@ -103,9 +103,8 @@ export default async function ProjectsPage() {
                     </div>
                 </section>
 
-                {/* Featured Case Studies Section */}
+                {/* Featured Case Studies Section - Alternating Layout */}
                 <section className="container mx-auto px-4 mb-24">
-                    {/* Header with Dividers */}
                     <div className="flex items-center gap-4 mb-12">
                         <div className="h-1 flex-1 bg-[#1e3a8a] max-w-[100px] md:max-w-[200px]"></div>
                         <h2 className="text-2xl md:text-3xl font-bold text-[#1e1e1e] dark:text-white whitespace-nowrap">Featured Case Studies</h2>
@@ -113,7 +112,7 @@ export default async function ProjectsPage() {
                     </div>
 
                     <div className="flex flex-col gap-12">
-                        {projects?.map((project, idx) => {
+                        {featuredProjects.map((project, idx) => {
                             const isOdd = idx % 2 !== 0;
                             const stats = project.stats as any || {};
                             return (
@@ -126,11 +125,11 @@ export default async function ProjectsPage() {
                                             className="object-cover"
                                         />
                                         <div className={`absolute top-6 ${isOdd ? 'right-6 bg-[#00c055]' : 'left-6 bg-[#1e3a8a]'} text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-sm shadow-sm`}>
-                                            {project.featured ? 'Ongoing Project' : 'Completed'}
+                                            Ongoing Project
                                         </div>
                                     </div>
                                     <div className={`p-8 md:p-12 lg:p-16 flex flex-col justify-center ${isOdd ? 'md:order-1' : ''}`}>
-                                        <h3 className="text-3xl font-black text-[#1e1e1e] dark:text-white mb-6 leading-tight">
+                                        <h3 className="text-3xl font-black text-[#0f1c2e] dark:text-white mb-6 leading-tight">
                                             {project.title}
                                         </h3>
                                         <p className="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-[15px]">
@@ -151,7 +150,7 @@ export default async function ProjectsPage() {
                                         </div>
 
                                         <Link href={`/projects/${project.slug}`} className="inline-flex items-center text-[#1e3a8a] dark:text-[#00c055] font-bold text-sm group hover:underline">
-                                            Read Full Case Study <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                                            Read Case Study <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                                         </Link>
                                     </div>
                                 </div>
@@ -159,17 +158,20 @@ export default async function ProjectsPage() {
                         })}
                     </div>
                 </section>
+
+                {/* All Projects Grid Section */}
+                <ProjectsGrid projects={regularProjects} />
+
                 {/* Our Footprint Section */}
                 <section className="bg-[#0f1416] py-24">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-16 max-w-2xl mx-auto">
                             <h2 className="text-4xl font-extrabold text-white mb-6">Our Footprint</h2>
                             <p className="text-gray-400 leading-relaxed font-medium">
-                                Strategically positioned to catalyze energy reform across West Africa and beyond. Hover over the markers to see active project sites.
+                                Strategically positioned to catalyze energy reform across West Africa and beyond.
                             </p>
                         </div>
 
-                        {/* Map Container */}
                         <div className="bg-[#1a2226] rounded-3xl p-8 mb-16 relative overflow-hidden min-h-[600px] flex items-center justify-center border border-white/5">
                             <div className="relative w-[600px] h-[600px]">
                                 <Image
@@ -178,75 +180,34 @@ export default async function ProjectsPage() {
                                     fill
                                     className="object-contain opacity-90"
                                 />
-
-                                {/* Interactive Markers */}
                                 <div className="absolute inset-0 z-10">
-                                    {/* Nigeria Marker (Green) */}
+                                    {/* Nigeria Marker */}
                                     <div className="absolute top-[45%] left-[48%] group cursor-pointer">
-                                        <div className="relative flex items-center justify-center">
-                                            {/* Hover Glow */}
-                                            <div className="absolute w-8 h-8 bg-[#00c055]/30 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                            {/* Marker */}
-                                            <div className="relative w-4 h-4 bg-[#00c055] rounded-full border-[2px] border-white shadow-sm z-10 box-content"></div>
-                                        </div>
-
-                                        {/* Tooltip */}
-                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 bg-white dark:bg-card p-4 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-center z-50 pointer-events-none border border-transparent dark:border-gray-800">
-                                            <div className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase mb-1">Active Hub</div>
+                                        <div className="relative w-4 h-4 bg-[#00c055] rounded-full border-[2px] border-white z-10 box-content"></div>
+                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 bg-white dark:bg-card p-4 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 text-center z-50 border border-transparent dark:border-gray-800">
+                                            <div className="text-[10px] text-gray-400 font-bold mb-1 uppercase">Active Hub</div>
                                             <div className="text-sm font-black text-[#0f1c2e] dark:text-white">Nigeria Operations</div>
-                                            <div className="w-2 h-2 bg-white dark:bg-card absolute -bottom-1 left-1/2 -translate-x-1/2 rotate-45 border-r border-b border-transparent dark:border-gray-800"></div>
-                                        </div>
-                                    </div>
-
-                                    {/* West Africa Marker (Blue) */}
-                                    <div className="absolute top-[48%] left-[40%] group cursor-pointer">
-                                        <div className="relative flex items-center justify-center">
-                                            {/* Hover Glow */}
-                                            <div className="absolute w-8 h-8 bg-[#1e3a8a]/30 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                            {/* Marker */}
-                                            <div className="relative w-4 h-4 bg-[#1e3a8a] rounded-full border-[2px] border-white shadow-sm z-10 box-content"></div>
-                                        </div>
-
-                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-fit whitespace-nowrap bg-[#1e3a8a] text-white p-3 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-center z-50">
-                                            <div className="text-xs font-bold">Expansion Zone</div>
-                                            <div className="w-2 h-2 bg-[#1e3a8a] absolute -bottom-1 left-1/2 -translate-x-1/2 rotate-45"></div>
-                                        </div>
-                                    </div>
-
-                                    {/* East Africa Marker (Grey) */}
-                                    <div className="absolute top-[55%] left-[68%] group cursor-pointer">
-                                        <div className="relative flex items-center justify-center">
-                                            {/* Hover Glow */}
-                                            <div className="absolute w-8 h-8 bg-white/20 rounded-full blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                            {/* Marker */}
-                                            <div className="relative w-4 h-4 bg-gray-400 rounded-full border-[2px] border-white shadow-sm z-10 box-content"></div>
-                                        </div>
-
-                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-fit whitespace-nowrap bg-white dark:bg-card text-[#0f1c2e] dark:text-white px-4 py-2 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-center z-50 border border-transparent dark:border-gray-800">
-                                            <div className="text-xs font-bold">Planned 2026</div>
-                                            <div className="w-2 h-2 bg-white dark:bg-card absolute -bottom-1 left-1/2 -translate-x-1/2 rotate-45 border-r border-b border-transparent dark:border-gray-800"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Stats Cards */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                             <div className="bg-[#1a2226] p-8 rounded-2xl border border-white/5 text-center group hover:border-[#00c055]/30 transition-colors">
-                                <div className="text-5xl font-black text-[#00c055] mb-2 group-hover:scale-110 transition-transform duration-300">04</div>
+                                <div className="text-5xl font-black text-[#00c055] mb-2">04</div>
                                 <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Countries</div>
                             </div>
                             <div className="bg-[#1a2226] p-8 rounded-2xl border border-white/5 text-center group hover:border-[#1e3a8a]/30 transition-colors">
-                                <div className="text-5xl font-black text-[#1e3a8a] mb-2 group-hover:scale-110 transition-transform duration-300">18</div>
+                                <div className="text-5xl font-black text-[#1e3a8a] mb-2">18</div>
                                 <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Active Sites</div>
                             </div>
                             <div className="bg-[#1a2226] p-8 rounded-2xl border border-white/5 text-center group hover:border-[#00c055]/30 transition-colors">
-                                <div className="text-5xl font-black text-[#00c055] mb-2 group-hover:scale-110 transition-transform duration-300">120MW</div>
+                                <div className="text-5xl font-black text-[#00c055] mb-2">120MW</div>
                                 <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Under Management</div>
                             </div>
                             <div className="bg-[#1a2226] p-8 rounded-2xl border border-white/5 text-center group hover:border-[#1e3a8a]/30 transition-colors">
-                                <div className="text-5xl font-black text-[#1e3a8a] mb-2 group-hover:scale-110 transition-transform duration-300">2026</div>
+                                <div className="text-5xl font-black text-[#1e3a8a] mb-2">2026</div>
                                 <div className="text-xs font-bold text-gray-500 uppercase tracking-widest">Pan-Africa Goal</div>
                             </div>
                         </div>
