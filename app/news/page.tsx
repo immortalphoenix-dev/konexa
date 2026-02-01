@@ -79,9 +79,11 @@ export default async function NewsPage() {
                                     <p className="text-gray-500 dark:text-gray-400 text-lg mb-8 leading-relaxed">
                                         {featuredArticle.excerpt}
                                     </p>
-                                    <Button size="lg" className="self-start rounded-full bg-[#0f1c2e] dark:bg-blue-600 hover:bg-[#1e3a8a] dark:hover:bg-blue-700 px-8">
-                                        Read Full Story <ArrowRight className="ml-2 h-4 w-4" />
-                                    </Button>
+                                    <Link href={`/news/${featuredArticle.slug}`}>
+                                        <Button size="lg" className="rounded-full bg-[#0f1c2e] dark:bg-blue-600 hover:bg-[#1e3a8a] dark:hover:bg-blue-700 px-8 h-14 font-bold shadow-lg transition-all hover:scale-105">
+                                            Read Full Story <ArrowRight className="ml-2 h-5 w-5" />
+                                        </Button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
@@ -92,43 +94,55 @@ export default async function NewsPage() {
                 <section className="py-16 pb-24">
                     <div className="container mx-auto px-4">
                         <div className="flex justify-between items-end mb-12">
-                            <h3 className="text-2xl font-bold text-[#0f1c2e] dark:text-white">Recent Updates</h3>
+                            <div>
+                                <h3 className="text-2xl md:text-3xl font-bold text-[#0f1c2e] dark:text-white mb-2">Editor's Choice</h3>
+                                <p className="text-gray-500 text-sm">Deep dives into energy infrastructure and sustainable development.</p>
+                            </div>
                             <div className="hidden md:flex gap-2">
-                                {["All", "Company News", "Industry Insights", "Sustainability"].map((cat, i) => (
-                                    <Button key={cat} variant={i === 0 ? "default" : "outline"} size="sm" className={`rounded-full ${i === 0 ? "bg-[#00c055] hover:bg-[#00a047]" : "border-gray-300 text-gray-500"}`}>
+                                {["All", "Analytics", "Insights", "Company"].map((cat, i) => (
+                                    <Button key={cat} variant={i === 0 ? "default" : "outline"} size="sm" className={`rounded-full px-5 h-9 font-bold transition-all ${i === 0 ? "bg-[#00c055] hover:bg-[#00a047] border-0" : "border-gray-200 text-gray-500 hover:bg-gray-50"}`}>
                                         {cat}
                                     </Button>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {gridArticles.map((article, idx) => (
-                                <Link href={`/news/${article.slug}`} key={article.id || idx} className="group block bg-white dark:bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-800 h-full flex flex-col">
-                                    <div className="relative h-48 bg-gray-200 dark:bg-muted/30">
-                                        {article.image_url ? (
-                                            <Image
-                                                src={article.image_url}
-                                                alt={article.title}
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        ) : (
-                                            <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-600">
-                                                <FileText size={48} />
+                                <Link href={`/news/${article.slug}`} key={article.id || idx} className="group block h-full">
+                                    <div className="bg-white dark:bg-card rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-800 h-full flex flex-col group/card">
+                                        <div className="relative h-64 overflow-hidden">
+                                            {article.image_url ? (
+                                                <Image
+                                                    src={article.image_url}
+                                                    alt={article.title}
+                                                    fill
+                                                    className="object-cover transition-transform duration-700 group-hover/card:scale-110"
+                                                />
+                                            ) : (
+                                                <div className="absolute inset-0 bg-[#0f172a] flex items-center justify-center text-white/5">
+                                                    <FileText size={48} />
+                                                </div>
+                                            )}
+                                            <div className="absolute top-6 left-6 bg-white/95 dark:bg-black/90 backdrop-blur-md text-[10px] font-black px-4 py-2 uppercase tracking-[0.2em] rounded-xl shadow-lg border border-gray-100 dark:border-gray-800">
+                                                {article.category}
                                             </div>
-                                        )}
-                                    </div>
-                                    <div className="p-6 flex flex-col flex-grow">
-                                        <div className="flex justify-between items-center mb-4">
-                                            <span className="text-xs font-bold text-[#00c055] uppercase tracking-wider">{article.category}</span>
-                                            <span className="text-xs text-gray-400 dark:text-gray-500">{format(new Date(article.published_at), 'MMM dd, yyyy')}</span>
                                         </div>
-                                        <h4 className="font-bold text-[#0f1c2e] dark:text-white text-lg mb-4 line-clamp-2 group-hover:text-[#00c055] transition-colors">
-                                            {article.title}
-                                        </h4>
-                                        <div className="mt-auto pt-4 flex items-center text-sm font-bold text-[#0f1c2e] dark:text-gray-300 group-hover:translate-x-2 transition-transform">
-                                            Read More <ArrowRight size={14} className="ml-1" />
+                                        <div className="p-10 flex flex-col flex-grow">
+                                            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-4">
+                                                {format(new Date(article.published_at), 'MMMM dd, yyyy')}
+                                            </div>
+                                            <h4 className="font-extrabold text-[#0f1c2e] dark:text-white text-2xl mb-6 line-clamp-2 group-hover/card:text-[#00c055] transition-colors leading-tight">
+                                                {article.title}
+                                            </h4>
+
+                                            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3">
+                                                {article.excerpt}
+                                            </p>
+
+                                            <div className="mt-auto flex items-center text-sm font-black text-[#0f1c2e] dark:text-gray-300 group/link">
+                                                Discover Path <ArrowRight size={16} className="ml-2 group-hover/link:translate-x-1 transition-transform text-[#00c055]" />
+                                            </div>
                                         </div>
                                     </div>
                                 </Link>
